@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # ollama-cpu:
+  #   image: ollama/ollama:latest
+  #   container_name: ollama-cpu
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ./modules:/root/.ollama
+
+  ollama-nvidia:
+    restart: unless-stopped
+    image: ollama/ollama:latest
+    container_name: ollama-nvidia
+    ports:
+      - "22434:11434"
+    environment:
+      - OLLAMA_MODELS=/ollama/models
+    #   - OLLAMA_KEEP_ALIVE=24h      
+    volumes:
+      # - ./modules:/root/.ollama
+      - /mnt/f/OllamaModels:/ollama/models
+    # networks:
+    #   - ollama-docker      
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
